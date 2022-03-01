@@ -28,6 +28,36 @@ along with (Plugin Name). If not, see (http://link to your plugin license).
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+add_action( 'init', 'github_plugin_updater' );
+function github_plugin_updater() {
+
+    include_once 'updater.php';
+
+    define( 'WP_GITHUB_FORCE_UPDATE', true );
+
+    if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
+
+        $config = array(
+            'slug' => plugin_basename( __FILE__ ),
+            'proper_folder_name' => 'helioswp',
+            'api_url' => 'https://api.github.com/repos/helioswp/helioswp',
+            'raw_url' => 'https://raw.github.com/helioswp/helioswp/master',
+            'github_url' => 'https://github.com/helioswp/helioswp',
+            'zip_url' => 'https://github.com/helioswp/helioswp/archive/master.zip',
+            'sslverify' => true,
+            'requires' => '5.9',
+            'tested' => '5.9',
+            'readme' => 'README.md',
+            'access_token' => '',
+        );
+
+        new WP_GitHub_Updater( $config );
+
+    }
+
+}
+
 add_action('admin_menu', 'mt_add_pages');
 add_action('create_database','wp_helios_create_database');
 add_action('template_redirect','wp_helios_free_product_frontend');
